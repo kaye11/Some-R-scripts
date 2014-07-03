@@ -1,0 +1,19 @@
+  ##Gross Distance
+  
+  if(t1$ID <- 0) {t1$GD <- 0} else {t1$GD <- t1$GD+t1$Vcor}
+    
+  ##Net Distance
+  if(condition){statements} else {statements}
+  if(t1$ID = 0) {(t1$X0 <- t1$X), (t1$Y0 <- t1$Y)}
+  else {t1$ND.2=((t1$X0-t1$X)^2)+(t1$Y0-t1$Y)^2)}
+  t1$ND <- t1$ND.2^0.5
+  
+  
+mydata$sum <- mydata$x1 + mydata$x2
+mydata$mean <- (mydata$x1 + mydata$x2)/2
+
+attach(t1)
+GD <-(c) (if(t1$ID <- 0) {GD <- 0} else {GD <- GD+t1$Vcor})
+detach(t1)
+
+GD <- (if(t1$ID <- 0) {GD <- 0}

@@ -1,0 +1,17 @@
+t1 <- trackdata2
+# This makes a unique track identifier
+t1$TID = as.factor(paste(t1$ID, t1$A, sep = "t"))
+t1$A = as.factor(t1$A)
+# how many pixels do you have per millimeter
+pixpermm = 20
+# speed in mm
+t1$Vcor = t1$V/pixpermm
+# from mm per 1/25th per second
+t1$VcorNasPs = t1$Vcor * 25
+
+# To create GD as a variable
+GD <- numeric ()
+# If function
+if(t1$ID <- 0) {t1$GD <- 0} else {GD <- t1$GD+t1$Vcor}
+# Loop for analysis of all data
+for (i in 1:14213) {if(t1$ID <- 0) {t1$GD <- 0} else {GD <- t1$GD+t1$Vcor}}

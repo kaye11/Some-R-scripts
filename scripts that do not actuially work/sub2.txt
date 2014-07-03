@@ -1,0 +1,1 @@
+savefile <- sapply( dfs , function(x) write.table(x[,3:4], paste ("d:/Karen's/PhD/R program/Processed_data/trackdata/",x,".csv"), sep=";", row.names = F), simplify = TRUE, USE.NAMES = TRUE)
