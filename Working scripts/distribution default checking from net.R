@@ -1,13 +1,15 @@
 library(fBasics)
 library(vcd)
 
-x.norm<-rnorm(n=200,m=10,sd=2) 
+#normal
+x.norm<-rnorm(n=binAdata$Vlog,m=0.80,sd=0.71) 
+hist(binAdata$Vlog,main="Histogram of observed data") #getting a histogram
+plot(density(binAdata$Vlog),main="Density estimate of data") #getting a density plot
+plot(ecdf(binAdata$Vlog),main= "Empirical cumulative distribution function")
+qqplot(binAdata$Vlog, x.norm)
+abline(0,1)
 
-hist(nso$Vm,main="Histogram of observed data") #getting a histogram
-plot(density(nso$Vm),main="Density estimate of data") #getting a density plot
-plot(ecdf(nso$Vm),main= "Empirical cumulative distribution function")
-
-z.norm<-(nso$Vm-mean(nso$Vm))/sd(nso$Vm) ## standardized data 
+z.norm<-(binAdata$Vlog-mean(binAdata$Vlog))/sd(binAdata$Vlog) ## standardized data 
 qqnorm(z.norm) ## drawing the QQplot 
 abline(0,1) ## drawing a 45-degree reference line 
 
@@ -17,13 +19,54 @@ abline(0,1) ## drawing a 45-degree reference line
 #evidence for the conclusion that the data set have come from a population 
 #with a different distribution
 
-x.wei<-rweibull(n=200,shape=2.1,scale=1.1) ## sampling from a Weibull distribution with parameters shape=2.1 and scale=1.1 
-x.teo<-rweibull(n=200,shape=2, scale=1) ## theorical quantiles from a Weibull population with known paramters shape=2 e scale=1 
-qqplot(x.teo,x.wei,main="QQ-plot distr. Weibull") ## QQ-plot 
-abline(0,1) ## a 45-degree reference line is plotted 
 
-x.poi<-rpois(n=200,lambda=2.5) 
+x.poi<-rpois(binAdata$Vlog,lambda=mean(binAdata$Vlog)) 
 hist(x.poi,main="Poisson distribution") 
+plot(density(x.poi))
+qqplot(binAdata$Vlog, x.poi)
+abline(0,1)
+
+x.gam<-rgamma(binAdata$Vlog,scale=0.76,shape=12.95) 
+hist(x.gam)
+plot(density(x.gam))
+qqplot(binAdata$Vlog, x.gam)
+abline(0,1)
+
+
+x.wei<-rweibull(binAdata$Vlog,shape=3.31,scale=0.81) 
+hist(x.wei)
+plot(density(x.wei))
+#x.teo<-rweibull(binAdata$Vlog,shape=2, scale=1) ## theorical quantiles from a Weibull population with known paramters shape=2 e scale=1 
+qqplot(binAdata$Vlog, x.wei)
+abline(0,1)
+
+x.log <- rlogis(binAdata$Vlog, location=5.05, scale=2)
+hist(x.log)
+plot(density(x.log))
+
+#qqplot(x.teo,x.wei,main="QQ-plot distr. Weibull") ## QQ-plot 
+#abline(0,1) ## a 45-degree reference line is plotted 
+
+fitdistr(x.gam,"gamma") ## fitting gamma pdf parameters 
+
+fitdistr(x.wei,"weibull")
+
+fitdistr(x.norm,"normal") ## fitting gaussian pdf parameters
+
+fitdistr(x.log, "logistic")
+
+ks.test(x.gam, "pgamma", scale=0.76, shape=12.95)
+
+ks.test (x.wei, "pweibull", scale=0.81, shape=3.31)
+
+ks.test(x.norm, "pnorm", m=0.80, sd= 0.72)
+
+ks.test(x.log, "plogis", location=5.05, scale=2)
+
+shapiro.test(x.norm)
+shapiro.test(x.gam)
+shapiro.test(x.wei)
+
 
 curve(dnorm(x,m=10,sd=2),from=0,to=20,main="Normal distribution") 
 
@@ -42,8 +85,7 @@ mean.hat<-mean(x.norm)
 mean.hat 
 
 
-x.gam<-rgamma(200,rate=0.5,shape=3.5) ## sampling from a gamma distribution with 
-#l=0.5 (scale parameter 12) and a=3.5 (shape parameter) 
+
 
 med.gam<-mean(x.gam) ## sample mean 
 var.gam<-var(x.gam) ## sample variance 
@@ -93,7 +135,7 @@ gf<-goodfit(x.poi,type= "poisson",method= "MinChisq")
 summary(gf) 
 plot(gf,main="Count data vs Poisson distribution") 
 
-rate <- mean(nso$Vm)/var(nso$Vm)
+rate <- mean(binAdata$Vlog)/var(binAdata$Vlog)
 
 
 
@@ -105,7 +147,7 @@ p<-c((pgamma(3,shape=3.5,rate=0.5)-pgamma(0,shape=3.5,rate=0.5)),
      (pgamma(12,shape=3.5,rate=0.5)-pgamma(9,shape=3.5,rate=0.5)), 
      (pgamma(18,shape=3.5,rate=0.5)-pgamma(12,shape=3.5,rate=0.5))) 
 
-chisq.test(x=f.os,p=p) ## chi-square test 
+chisq.test(x=freq.os,p=p) ## chi-square test 
 
 ks.test(x.wei,"pweibull", shape=2,scale=1) 
 

@@ -1,0 +1,6 @@
+W1 <- gamm(f1, method="REML", weights = varIdent(form=~T), data=count)
+W2 <- gamm(f1, method="REML", weights = varIdent(form=~Bin), data=count)
+W3 <- gamm(f1, method="REML", weights = varIdent(form=~treatment/Bin), data=count) 
+W4 <- gamm(f1, method="REML", weights = varIdent(form=~treatment/T), data=count)
+W5 <- gamm(f1, method="REML", weights = varIdent(form=~treatment/reptreat), data=count)
+W6 <- gamm(f1, method="REML", weights = varIdent(form=~reptreat), data=count)

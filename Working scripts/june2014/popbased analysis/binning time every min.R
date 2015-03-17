@@ -24,19 +24,27 @@ con.alox=unique(NT[, list(Vm=mean(V), ang=length(unique(angs)), len=length(T), d
 con.alox$freq=con.alox$ang/con.alox$len
 
 #con.alox=con.alox[complete.cases(con.alox$dir), ]#remove data with NaNs
-
+#save data table
 si.alox$cond=c("Si")
 con.alox$cond=c("Cont")
 
 aloxall3=rbind(si.alox, con.alox)
-
 ##drop outbin from data set
 alox3=aloxall3[bin!= "outbin",]
 
+
+#save the raw data that is binned
+si.binned$cond=c("Si")
+con.binned$cond=c("Control")
+
+raw.binned=rbind(si.binned, con.binned)
+raw.binned_noout=raw.binned[raw.binned$bin!= "outbin", ]
+
+
 ##save alox and aloxall (2nd edition)
 
-write.table (aloxall3, "d:/Karen's/PhD/R program/Processed_data/trackdata/densecells_popbased/binneddata/aloxall3.cor.csv", 
+write.table (raw.binned, "d:/Karen's/PhD/R program/Processed_data/trackdata/densecells_popbased/binneddata/raw.all.binned.spa4.temp60.csv", 
              sep=";", col.names=T, row.names=F)
 
-write.table (alox3, "d:/Karen's/PhD/R program/Processed_data/trackdata/densecells_popbased/binneddata/alox3.cor.csv", 
+write.table (raw.binned_noout, "d:/Karen's/PhD/R program/Processed_data/trackdata/densecells_popbased/binneddata/raw.allconc.binned.spa4.temp60.cor.csv", 
              sep=";", col.names=T, row.names=F)

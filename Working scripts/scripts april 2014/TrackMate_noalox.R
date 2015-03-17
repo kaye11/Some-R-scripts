@@ -14,13 +14,6 @@ t1=s1
 qplot(X, Y, data = t1, color = factor(A), group = factor(A))+
   guides(col = guide_legend(nrow = 25)) + scale_y_reverse()+ geom_path(aes(group=factor(A))) 
 
-
-t1=t1[!t1$A=="803", ] #mot-002
-t1=t1[!t1$A=="980", ] #mot-002
-t1=t1[!t1$A=="2623", ] #mot-002
-t1=t1[!t1$A=="7", ] #mot-002
-
-
 library(data.table)
 library(zoo)
 
@@ -44,17 +37,30 @@ t1[,f:=c(NA,(Y[3:(.N)]),NA),by=A]
 
 t1[, scalar:=(a-c)*(a-e)+(b-d)*(b-f)]
 t1[, angle:=acos(((a-c)*(a-e)+(b-d)*(b-f))/(sqrt((a-c)^2+(b-d)^2)*sqrt((a-e)^2+(b-f)^2)))*deg]
+t1[, angle2:=c(NA, (na.locf(angle [1:(.N-1)])), NA), by=A]
+t1[, angs:=sin(angle2)]
+
 ##NaNs will be produced when cells are not moving. If scalar is 0 then angle should be 0.
-t1$angle[ is.nan(t1$angle) ] <- 0 #change NaNs to 0
 t1$a=NULL
 t1$b=NULL
 t1$c=NULL
 t1$d=NULL
 t1$e=NULL
 t1$f=NULL
+t1$scalar=NULL
+t1$angle=NULL
+t1$angle2=NULL
 
 
 ##saving data
 VN<- readline("What data did you analyse?")
 Vid<-paste ("d:/Karen's/PhD/R program/Processed_data/trackdata/dilutedcells/",VN,".csv")
 write.table(t1, Vid, sep=";", col.names=T, row.names=F)
+
+
+t1=t1[!t1$A=="803", ]
+t1=t1[!t1$A=="980", ]
+t1=t1[!t1$A=="2623", ]
+t1=t1[!t1$A=="7", ]
+
+

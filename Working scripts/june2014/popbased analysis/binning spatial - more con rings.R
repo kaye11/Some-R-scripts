@@ -17,7 +17,7 @@ a <- as.numeric(unlist(strsplit(angStr, ",")));
 
 a
 center <- a
-radii <- seq(100, 500, 100)
+radii <- seq(100, 400, 50)
 
 
 # calculate the distance to the center for each row of object t1, apply does not work with data.tables
@@ -34,20 +34,33 @@ points(t1$X, t1$Y, col=group)
 binA=t1[group==1, ]
 binB=t1[group==2, ]
 binC=t1[group==3, ]
-outbin=t1[group==4, ]
+binD=t1[group==4, ]
+binE=t1[group==5, ]
+binF=t1[group==6, ]
+binG=t1[group==7, ]
+outbin=t1[group==8, ]
 
 #t1
 t1binA=binA
 t1binB=binB
 t1binC=binC
+t1binD=binD
+t1binE=binE
+t1binF=binF
+t1binG=binG
 t1out=outbin
+
 
 t1binA$bin=c("binA")
 t1binB$bin=c("binB")
 t1binC$bin=c("binC")
+t1binD$bin=c("binD")
+t1binE$bin=c("binE")
+t1binF$bin=c("binF")
+t1binG$bin=c("binG")
 t1out$bin=c("outbin")
 
-t1=rbind (t1binA, t1binB, t1binC, t1out)
+t1=rbind (t1binA, t1binB, t1binC, t1binD, t1binE, t1binF, t1binG, t1out)
 
 VN<- readline("What data did you analyse? SPECIFY DATA TYPE:")
 Vid<-paste ("d:/Karen's/PhD/R program/Processed_data/trackdata/densecells_popbased/binneddata/",VN,".csv")

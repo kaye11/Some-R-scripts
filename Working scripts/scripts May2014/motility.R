@@ -4,6 +4,8 @@ library(gdata)
 library(reshape)
 library(plotrix)
 library(Kendall)
+library(ggthemes)
+library(gridExtra)
 
 nor=n1
 sta=s1
@@ -71,8 +73,8 @@ freqsum<- data.frame(cond, mean, se, sd)
 # plot everything (using standard error and not standard deviation)
 ggplot(data=vsum, aes(x=cond, y=mean, width=0.75)) + geom_bar(aes(fill = cond), position = "dodge", stat="identity") +
   geom_errorbar(width=.1, size=1, aes(ymin=mean-se, ymax=mean+se))+
-  labs(list(title="Day 3 Starved, Mean Velocity", x = "Condition", y = "Mean Velocity (um/sec)")) +
-  scale_fill_manual("Cond",values = c("#CCCCCC", "#000000"))+theme_classic()+
+  labs(list(title="Mean Speed", x = "Condition", y = "Mean speed (um/sec)")) +
+  scale_fill_manual("Cond",values = c("grey70", "black"))+theme_classic()+
   theme(axis.text=element_text(size=25, face="bold"), axis.title=element_text(size=25,face="bold"), 
         plot.title = element_text(size =35, face="bold"), legend.position="none") 
 
@@ -132,3 +134,49 @@ qplot(Vm, freq, data=ns [cond=="norm"]) + stat_smooth(method="lm", se=TRUE, size
 cor.test(~ Vm + freq, data=ns, subset=cond=="star", method="kendall") 
 qplot(Vm, freq, data=ns [cond=="norm"]) + stat_smooth(method="lm", se=TRUE, size=1, na.action=na.omit)+
   labs(list(x = "Mean Velocity", y = "Turning Rate"))
+
+
+##plotting general
+
+grid.newpage()
+text <- element_text(size = 30) #change the size of the axes
+theme_set(theme_bw())
+
+library(plyr)
+vsum$cond2=revalue(cond, c("Normal"="Normal medium", "Starving"="Si-free medium"))
+
+ggplot(data=vsum, aes(x=cond2, y=mean, width=0.75)) + geom_bar(aes(fill = cond2), position = "dodge", stat="identity") +
+  geom_errorbar(width=.1, size=1, aes(ymin=mean-se, ymax=mean+se))+
+  labs(y = "Mean Speed (µm/s)") +
+  scale_fill_manual("Cond",values = c("black", "darkred"))+
+  theme(axis.text.y=element_text(size=30), axis.title.y=element_text(size=30,face="bold", vjust=-0.05), 
+        plot.title = element_text(size =30, face="bold"), axis.title.x = element_blank(), 
+                                  axis.text=text,  legend.position="none",
+        strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,2), "cm"), panel.border = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +  
+  scale_y_continuous(expand=c(0,0)) 
+
+##plotting ppt
+
+grid.newpage()
+text <- element_text(size = 30) #change the size of the axes
+theme_set(theme_bw())
+
+library(plyr)
+vsum$cond2=revalue(cond, c("Normal"="+Si", "Starving"="-Si"))
+
+ggplot(data=vsum, aes(x=cond2, y=mean, width=0.75)) + geom_bar(aes(fill = cond2), position = "dodge", stat="identity") +
+  geom_errorbar(width=.1, size=1, aes(ymin=mean-se, ymax=mean+se))+
+  labs(y = "Mean Speed (µm/s)") +
+  scale_fill_manual("Cond",values = c("darkred", "black"))+
+  theme(axis.text.y=element_text(size=30), axis.title.y=element_text(size=30,face="bold", vjust=-0.05), 
+        plot.title = element_text(size =30, face="bold"), axis.title.x = element_blank(), 
+        axis.text=text,  legend.position="none",
+        strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,2), "cm"), panel.border = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black")) +  
+  scale_y_continuous(expand=c(0,0)) 
+

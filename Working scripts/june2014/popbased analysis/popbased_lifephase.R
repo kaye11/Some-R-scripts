@@ -46,14 +46,14 @@ freqsum<- data.frame(cond, mean, se, sd)
 # plot everything (using standard error and not standard deviation)
 ggplot(data=vsum, aes(x=cond, y=mean, width=0.75)) + geom_bar(aes(fill = cond), position = "dodge", stat="identity") +
   geom_errorbar(width=.1, size=1, aes(ymin=mean-se, ymax=mean+se))+
-  labs(list(title="Day 3", x = "Condition", y = "Mean Velocity (um/sec)")) +
+  labs(list(title="Mean Speed of Starved Cells", x = "Condition", y = "Mean speed (µm/sec)")) +
   scale_fill_manual("Cond",values = c("#CCCCCC", "#000000"))+theme_classic()+
   theme(axis.text=element_text(size=25, face="bold"), axis.title=element_text(size=25,face="bold"), 
         plot.title = element_text(size =35, face="bold"), legend.position="none") 
 
 ggplot(data=freqsum, aes(x=cond, y=mean, width=0.75)) + geom_bar(aes(fill = cond), position = "dodge", stat="identity") +
   geom_errorbar(width=.1, size=1, aes(ymin=mean-se, ymax=mean+se))+
-  labs(list(title="Day 3", x = "Condition", y = "Turning Rate")) +
+  labs(list(title="Mean Turning Rate of Starved Cells", x = "Condition", y = "Turning Rate")) +
   scale_fill_manual("Cond",values = c("#CCCCCC", "#000000"))+theme_classic()+
   theme(axis.text=element_text(size=25, face="bold"), axis.title=element_text(size=25,face="bold"), 
         plot.title = element_text(size =35, face="bold"), legend.position="none")
@@ -98,8 +98,28 @@ cor.test(test$Vm, test$freq, method="kendall")
 
 summary(Kendall (test$Vm, test$freq))
 
+Kendall(ns$Vm, ns$freq)
+Kendall(si$Vm, si$freq)
+Kendall(con$Vm, con$freq)
+
+summary(Kendall (si$Vm, si$freq))
+summary(Kendall (con$Vm, con$freq))
+
 qplot(Vm, freq, data=test) + stat_smooth(method="lm", se=TRUE, size=1)+
   labs(list(title="Correlation of Mean Velocity and Turning Rate", x = "Mean Velocity", y = "Turning Rate"))+ 
+  theme_classic()+
+  theme(axis.text=element_text(size=25, face="bold"), axis.title=element_text(size=25,face="bold"), 
+        plot.title = element_text(size =35, face="bold"), legend.position="none")
+
+
+qplot(Vm, freq, data=si) + stat_smooth(method="lm", se=TRUE, size=1)+
+  labs(list(title="Correlation of Mean Velocity and Turning Rate \n(Silica)", x = "Mean Velocity", y = "Turning Rate"))+ 
+  theme_classic()+
+  theme(axis.text=element_text(size=25, face="bold"), axis.title=element_text(size=25,face="bold"), 
+        plot.title = element_text(size =35, face="bold"), legend.position="none")
+
+qplot(Vm, freq, data=con) + stat_smooth(method="lm", se=TRUE, size=1)+
+  labs(list(title="Correlation of Mean Velocity and Turning Rate \n(Control)", x = "Mean Velocity", y = "Turning Rate"))+ 
   theme_classic()+
   theme(axis.text=element_text(size=25, face="bold"), axis.title=element_text(size=25,face="bold"), 
         plot.title = element_text(size =35, face="bold"), legend.position="none")

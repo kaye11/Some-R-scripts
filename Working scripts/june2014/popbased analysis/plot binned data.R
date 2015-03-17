@@ -46,14 +46,22 @@ ggplot(dfc, aes(x=time, y=Vm, fill=cond)) +
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9))+facet_grid(~cond)
 
+ggplot(data=dfc, aes (x=time, y=V, group=cond, shape=cond, color=cond)) + geom_smooth() + 
+  labs(title="Mean Velocity (All Cells)", x="Time", y="Mean Velocity (µm/sec)")+ 
+  theme(axis.text=element_text(size=10, face="bold"), axis.title=element_text(size=15,face="bold"), 
+        plot.title = element_text(size =20, face="bold"), 
+        legend.title = element_text(colour="black", size=10, face="bold"), 
+        legend.text = element_text(colour="black", size = 10, face = "bold"))
+
+
 dfc2 <- summarySE(pro.binned, measurevar="Vm", groupvars=c("cond","time", "bin"))
 
-ggplot(dfc2, aes(x=time, y=Vm, fill=cond)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=Vm-se, ymax=Vm+se),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9))+facet_grid(cond~bin)
-
+ggplot(data=dfc2, aes (x=time, y=V, group=cond, shape=cond, color=cond)) + geom_smooth() + 
+  labs(title="Mean Velocity (Binned)", x="Time", y="Mean Velocity (µm/sec)")+ facet_wrap (~bin, ncol=2)+
+  theme(axis.text=element_text(size=10, face="bold"), axis.title=element_text(size=15,face="bold"), 
+        plot.title = element_text(size =20, face="bold"), 
+        legend.title = element_text(colour="black", size=10, face="bold"), 
+        legend.text = element_text(colour="black", size = 10, face = "bold"))
 
 ##another method instead if using data.table
 raw.binned=rbind(si.binned, con.binned)
@@ -77,7 +85,6 @@ ggplot(dfc2, aes(x=time, y=V, fill=cond)) +
 #plotting count data
 
 ggplot(data=dt, aes (x=time, y=count, group=cond, shape=cond, color=cond)) + facet_grid (cond~bin) + geom_point() + geom_line()
-
 
 
 ggplot(dfc, aes(x=time, y=angs, group=cond, shape=cond, color=cond)) + geom_point()+ 

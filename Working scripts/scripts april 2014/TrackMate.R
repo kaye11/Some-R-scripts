@@ -17,20 +17,13 @@ qplot(X, Y, data = t1, color = factor(A), group = factor(A))+
   guides(col = guide_legend(nrow = 25)) + scale_y_reverse()+ geom_path(aes(group=factor(A))) 
 
 qplot(X, Y, data=t1, color = factor(A), group = factor(A))+ geom_point(size=1)+
-  geom_path(lineend="round", size=1, arrow=arrow(angle=45, ends="last", type= "closed", length=unit (0.10, "inches")), 
+  geom_path(lineend="round", size=1, arrow=arrow(angle=45, ends="last", type= "closed", length=unit (0.20, "inches")), 
             mapping=aes(group=factor(A))) + scale_y_reverse()+theme_classic() + 
   labs(list(title="Control Alox Bead"))+
   theme(axis.text=element_text(size=20, face="bold"), axis.title=element_text(size=20,face="bold"), 
         legend.position="none", plot.title = element_text(size =20, face="bold"))+
-  annotate("path",x = 455 + 53.5*cos(seq(0,2*pi,length.out=100)), y=377 + 53.5*sin(seq(0,2*pi,length.out=100)), 
+  annotate("path",x = 337 + 49*cos(seq(0,2*pi,length.out=100)), y=322 + 49*sin(seq(0,2*pi,length.out=100)), 
            color="black", size=2)  
-
-qplot(X, Y, data=t1, color = factor(A), group = factor(A))+ geom_point(size=1)+
-  geom_path(lineend="square", size=1, mapping=aes(group=factor(A))) + scale_y_reverse()+theme_classic() + 
-  labs(list(title="Control Alox Bead"))+
-  theme(axis.text=element_text(size=20, face="bold"), axis.title=element_text(size=20,face="bold"), 
-        legend.position="none", plot.title = element_text(size =20, face="bold"))  
-
 
 ##parameter computations
 beadX<-as.numeric(readline("X position of the Bead?"))
@@ -66,8 +59,11 @@ t1$a=NULL
 t1$b=NULL
 t1$c=NULL
 t1$d=NULL
+t1$scalar=NULL
+t1$angle=NULL
+t1$angle2=NULL
 
 ##saving data
 VN<- readline("What data did you analyse?")
-Vid<-paste ("d:/Karen's/PhD/R program/Processed_data/trackdata/densecells_popbased/",VN,".csv")
+Vid<-paste ("d:/Karen's/PhD/R program/Processed_data/trackdata/densecells_popbased/raw data/",VN,".csv")
 write.table(t1, Vid, sep=";", col.names=T, row.names=F)
