@@ -429,18 +429,20 @@ ggplot(data = sub, aes(x=T,y=CellsN, color=treatment, shape=treatment))+
         panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm"))
 
 
-ggplot(data = BinA, aes(x=T,y=CellsN, color=treatment, shape=treatment))+ 
-  stat_smooth(method="loess", formula=y~x, size=2, se=TRUE)+ 
-  scale_colour_manual(values = c("lightcoral", "seagreen3", "steelblue2"),
-                      breaks=c("Control", "Ge","Si"),
-                      labels=c("Control", "dGe", "dSi")) +
+BinA$treat2 <- factor(BinA$treatment, levels=c("Control", "Ge", "Si"), labels=c("Control", "dGe", "dSi"))
+
+
+ggplot(data = BinA, aes(x=T,y=CellsN, color=treat2))+ 
+  stat_smooth(method="loess", formula=y~x, size=2, se=TRUE)+ facet_grid (~treat2)+
+  scale_colour_manual(values = c("lightcoral", "seagreen3", "steelblue2")) +
   labs(list(x = "Time (s)", y = "Normalized cell count"))+ labs (color="Experimental condition")+
   theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold", vjust=-0.0001), 
         axis.title.x=element_text(size=20,face="bold", vjust=-0.02),
-        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="bottom",
+        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="none",
         strip.text.x = text, strip.text.y = text, legend.title=element_blank(), 
         legend.text=text, panel.margin=unit (0.5, "lines"),
         panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm"))
+        panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm"))+
+  scale_x_continuous (breaks=c(200, 400, 600)) 
 
 

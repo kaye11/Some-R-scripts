@@ -18,11 +18,3 @@ dtf=dt[, list(scalar=((X.1*X.2)+(Y.1*Y.2)), mag=(sqrt(X.1^2+Y.1^2)*sqrt(X.2^2+Y.
 dtf$V=c(0, sqrt(diff(t1$X)^2 + diff(t1$Y)^2))
 dtf$ang=deg*(acos(dtf$scalar/dtf$mag))
 dtf$angs=sin(dtf$ang)
-dtf$ang2=deg*(cos(dtf$scalar/dtf$mag))
-dtf$ang3=deg*(sin(dtf$scalar/dtf$mag))
-dtf$ang4=deg*(asin(dtf$scalar/dtf$mag))
-
-
-library(ggplot2)
-ggplot(k[k$A==0,],aes(x=X,y=Y))+
-  geom_path()+geom_point(colour="red")+coord_fixed()

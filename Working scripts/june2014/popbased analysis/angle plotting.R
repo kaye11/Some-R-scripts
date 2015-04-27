@@ -18,9 +18,6 @@ ggplot(dfc2, aes(x=bin, y=angs, group=cond, shape=cond, color=cond)) + geom_poin
   geom_errorbar(aes(ymin=angs-se, ymax=angs+se),
                 width=.2)+facet_grid(~time)
 
-ggplot(aloxall, aes(x=bin, y=dir, group=cond, shape=cond, color=cond)) + geom_point()+geom_line()+facet_grid(~time)
-ggplot(aloxall, aes(x=time, y=dir, group=cond, shape=cond, color=cond)) + geom_point()+geom_line()+facet_grid(~bin)
-
 ##plotting proper
 raw.binned$Treatment=raw.binned$cond
 
@@ -39,7 +36,7 @@ p1=ggplot(rdfc1, aes(x=bin, y=angs, group=Treatment, shape=Treatment, color=Trea
         legend.title=text, legend.text=text, axis.title.x = element_blank(), 
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) +geom_hline(yintercept=0)+
-  scale_x_discrete(breaks=c("binA", "binB", "binC"), labels=c("Bin A", "Bin B", "Bin C"))
+  scale_x_discrete(breaks=c("binA", "binB", "binC"), labels=c("Bin a", "Bin b", "Bin c"))
 
 
 r2=subset(raw.binned, raw.binned$T>121 & raw.binned$T<240, )
@@ -52,7 +49,7 @@ p2=ggplot(rdfc2, aes(x=bin, y=angs, group=Treatment, shape=Treatment, color=Trea
         legend.title=text, legend.text=text, axis.title.x = element_blank(), 
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) +geom_hline(yintercept=0)+
-  scale_x_discrete(breaks=c("binA", "binB", "binC"), labels=c("Bin A", "Bin B", "Bin C"))
+  scale_x_discrete(breaks=c("binA", "binB", "binC"), labels=c("Bin a", "Bin b", "Bin c"))
 
 
 r3=subset(raw.binned, raw.binned$T>241 & raw.binned$T<360, )
@@ -65,7 +62,7 @@ p3=ggplot(rdfc3, aes(x=bin, y=angs, group=Treatment, shape=Treatment, color=Trea
         legend.title=text, legend.text=text, axis.title.x = element_blank(), 
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) +geom_hline(yintercept=0)+
-  scale_x_discrete(breaks=c("binA", "binB", "binC"), labels=c("Bin A", "Bin B", "Bin C"))
+  scale_x_discrete(breaks=c("binA", "binB", "binC"), labels=c("Bin a", "Bin b", "Bin c"))
 
 
 r4=subset(raw.binned, raw.binned$T>361 & raw.binned$T<480, )
@@ -78,7 +75,7 @@ p4=ggplot(rdfc4, aes(x=bin, y=angs, group=Treatment, shape=Treatment, color=Trea
         legend.title=text, legend.text=text, axis.title.x = element_blank(), 
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) +geom_hline(yintercept=0)+
-  scale_x_discrete(breaks=c("binA", "binB", "binC"), labels=c("Bin A", "Bin B", "Bin C"))
+  scale_x_discrete(breaks=c("binA", "binB", "binC"), labels=c("Bin a", "Bin b", "Bin c"))
 
 
 r5=subset(raw.binned, raw.binned$T>481 & raw.binned$T<600, )
@@ -87,11 +84,11 @@ p5=ggplot(rdfc5, aes(x=bin, y=angs, group=Treatment, shape=Treatment, color=Trea
   geom_errorbar(aes(ymin=angs-se, ymax=angs+se), width=.2, size=1) +
   ylim(-0.2, 0.2)+labs(title="481-600 s", y="Sine Angle")+ scale_colour_manual(values = c("lightcoral", "steelblue2")) +
   theme(axis.text=element_text(size=18), axis.title=element_text(size=20,face="bold"), 
-        plot.title = element_text(size=20, face="bold"), legend.position="none", 
+        plot.title = element_text(size=20, face="bold"), legend.position="right", 
         legend.title=text, legend.text=text, axis.title.x = element_blank(), axis.title.y=element_blank(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) +geom_hline(yintercept=0)+
-  scale_x_discrete(breaks=c("binA", "binB", "binC"), labels=c("Bin A", "Bin B", "Bin C"))
+  scale_x_discrete(breaks=c("binA", "binB", "binC"), labels=c("Bin a", "Bin b", "Bin c"))
 
 grid.arrange(p1, p2, p3, p4, p5, ncol=3)
 
