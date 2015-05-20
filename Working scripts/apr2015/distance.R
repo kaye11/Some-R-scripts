@@ -80,12 +80,14 @@ ggplot(data=Sumbin, aes(x=T, y=sum, color=cond)) +  geom_line() + geom_point()+
 binned$dist=sqrt(((binned$alox.X-binned$X)^2)+((binned$alox.Y-binned$Y)^2))
 
 distall <- ddply(binned, c("T", "bin", "cond"), summarise,
-                N    = length(dist),
-                mean = mean(dist, na.rm=TRUE),
-                sum= sum(dist, na.rm=TRUE), 
-                sd   = sd(dist, na.rm=TRUE),
-                se   = sd / sqrt(N), na.rm=TRUE)
+                 N    = length(dist),
+                 mean = mean(dist, na.rm=TRUE),
+                 sum= sum(dist, na.rm=TRUE), 
+                 sd   = sd(dist, na.rm=TRUE),
+                 se   = sd / sqrt(N), na.rm=TRUE,
+                 angs = mean(angs, na.rm=TRUE))
 
+ggplot(data=distall, aes(x=angs, y=sum, color=cond)) +  geom_line() + geom_point()+facet_grid(bin~cond, scales="free_y")
 
 ggplot(data=distall, aes(x=T, y=sum, color=cond)) +  geom_line() + geom_point()+
   labs(list(x = "Experimental condition", y = "Sum distance from the bead (µm)")) +
@@ -222,3 +224,12 @@ ggplot(data=distorder2, aes(x=time, y=relsum, color=cond)) +  stat_smooth(aes(gr
 
 write.table (binned, "d:/Karen's/PhD/R program/binned.csv", 
              sep=";", col.names=T, row.names=F)
+
+
+
+distsumcond <- ddply(binned, c("bin", "cond"), summarise,
+                 N    = length(dist),
+                 mean = mean(dist, na.rm=TRUE),
+                 sum= sum(dist, na.rm=TRUE), 
+                 sd   = sd(dist, na.rm=TRUE),
+                 se   = sd / sqrt(N), na.rm=TRUE)

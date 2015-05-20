@@ -28,8 +28,8 @@ mf_labeller <- function(var, value){
 count$treat2 <- factor(count$treatment, levels=c("Control", "Si"), labels=c("Control", "dSi"))
 
 countplot= ggplot(data = count, aes(x=T,y=CellsN, color=treatment))+ 
-  stat_smooth(method="loess", formula=y~x, size=2, se=TRUE)+ 
-  facet_grid(Bin~treat2, labeller=mf_labeller)+ scale_colour_manual(values = c("lightcoral", "steelblue2"), breaks=c("Control", "Si"),
+  stat_smooth(method="loess", formula=y~x, size=2, se=TRUE, alpha=0.2, aes(fill=treatment))+ 
+  facet_grid(.~Bin, labeller=mf_labeller)+ scale_colour_manual(values = c("lightcoral", "steelblue2"), breaks=c("Control", "Si"),
                                                               labels=c("Control", "dSi")) +
   labs(list(x = "Time (s)", y = "Normalized cell count"))+ labs (color="Experimental condition")+
     theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold", vjust=-0.0001), 
@@ -52,7 +52,7 @@ mf_labeller2 <- function(var, value){
 }
 
 velplot= ggplot(data = vel, aes(x=T,y=V, color=cond))+ 
-  stat_smooth(method="gam", formula=y~s(x, k=7), size=2, se=TRUE)+  
+  stat_smooth(method="gam", formula=y~s(x, k=7), size=2, se=TRUE, alpha=0.2, aes(fill=cond))+  
   facet_grid(.~bin, labeller=mf_labeller2)+  scale_colour_manual(values = c("lightcoral", "steelblue2"), breaks=c("Control", "Si"),
                                                                  labels=c("Control", "dSi")) +
   labs(list(x = "Time (s)", y = "Mean speed (µm/s)"))+ labs (color="Experimental condition")+
@@ -87,9 +87,26 @@ distorder2$distmm=distorder2$sum/1000
 distsum<- summarySE(binned2, measurevar="dist", groupvars=c("cond", "bin", "T"), na.rm=TRUE)
 
 distorder2$cond2 <- factor(distorder2$cond, levels=c("Con", "Si"), labels=c("Control", "dSi"))
+distorder2$Experimental Condition <- distorder2$cond
 
 
-distplot=ggplot(data=distorder2, aes(x=time, y=distmm, color=cond2)) +  stat_smooth(aes(group=cond), method="loess", size=2, se=TRUE)+
+distplot=ggplot(data=distorder2, aes(x=time, y=distmm, color=cond2)) +  
+  stat_smooth(aes(fill=cond2), method="loess", size=2, se=TRUE, alpha=0.2) +
+  labs(list(x = "Time (s)", y = "Sum distance \n from the bead (mm)")) +
+  scale_colour_manual(values = c("lightcoral", "steelblue2"), labels=c("Control", "dSi")) + 
+  facet_grid(.~bin, label=mf_labeller2, scales="free_y")+
+  labs (shape="Experimental condition")+
+  theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold", vjust=0.50), 
+        axis.title.x=element_text(size=20,face="bold", vjust=-0.01),
+        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="bottom",
+        strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm")) + 
+  scale_x_discrete (breaks=c("0", "200", "400", "600")) + scale_alpha(guide = 'none')
+
+
+
+distplot=ggplot(data=distorder2, aes(x=time, y=distmm, color=cond2, alpha=0.2, aes(fill=cond))) +  stat_smooth(aes(group=cond), method="loess", size=2, se=TRUE)+
   labs(list(x = "Time (s)", y = "Sum distance \n from the bead (mm)")) +
   scale_colour_manual(values = c("lightcoral", "steelblue2"), 
                       breaks=c("Con", "Si"), labels=c("Control", "dSi")) + 
