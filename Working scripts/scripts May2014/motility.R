@@ -9,9 +9,31 @@ library(gridExtra)
 
 nor=n1
 sta=s1
+
+nor$cond<- c("norm")
+sta$cond <-c("sta")
+
+motraw <- rbind(nor, sta)
+
+ggplot(data=motraw, aes(x=T, y=V, color=cond))+stat_smooth(method="gam", formula=y~s(x, k=6))
+ggplot(data=nor, aes(x=T, y=V))+stat_smooth(method="gam", formula=y~s(x, k=6))
+
+motraw2 <- subset (motraw [motraw$T > 10 & motraw$T <41, ])
+
+ggplot(data=motraw2, aes(x=T, y=V, color=cond))+stat_smooth(method="gam", formula=y~s(x, k=6))
+
+#use motraw2. re-analyze data
+
 #subsetting data to 30s
 n1 <-ddply(nor, .(A), head, n = 30)
 s1 <-ddply(sta, .(A), head, n = 30)
+
+n1$cond<- c("norm")
+s1$cond <- c("sta")
+
+mot<- rbind(n1, s1)
+
+ggplot(data=mot, aes(x=T, y=V, color=cond))+stat_smooth(method="gam", formula=y~s(x, k=6))
 
 ##Plotting trajectories (whole data set) + guides show the legend in an order (t1)
 qplot(X, Y, data = n1, color = factor(A), group = factor(A))+
@@ -143,12 +165,12 @@ text <- element_text(size = 30) #change the size of the axes
 theme_set(theme_bw())
 
 library(plyr)
-vsum$cond2=revalue(cond, c("Normal"="Normal medium", "Starving"="Si-free medium"))
+vsum$cond2=revalue(cond, c("Normal"="Si-rich medium", "Starving"="Si-free medium"))
 
 ggplot(data=vsum, aes(x=cond2, y=mean, width=0.75)) + geom_bar(aes(fill = cond2), position = "dodge", stat="identity") +
   geom_errorbar(width=.1, size=1, aes(ymin=mean-se, ymax=mean+se))+
-  labs(y = "Mean Speed (µm/s)") +
-  scale_fill_manual("Cond",values = c("black", "darkred"))+
+  labs(y = "Mean speed (µm/s)") +
+  scale_fill_manual("Cond",values = c("darkred", "black"))+
   theme(axis.text.y=element_text(size=30), axis.title.y=element_text(size=30,face="bold", vjust=-0.05), 
         plot.title = element_text(size =30, face="bold"), axis.title.x = element_blank(), 
                                   axis.text=text,  legend.position="none",

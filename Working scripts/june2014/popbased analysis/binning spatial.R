@@ -27,7 +27,9 @@ group <- cut(distcenter, c(-1, radii, 2*max(radii)), labels=FALSE)
 
 # draw circles in x,y coordinate space, use the eqscplot() function from package MASS
 eqscplot(0, 0, type="n", xlim=range(t1$X, center[1]+c(-1, 1)*max(radii)), ylim=rev(range(t1$Y, center[2]+c(-1, 1)*max(radii))))
-draw.circle(center[1], center[2], radii)
+draw.circle(center[1], center[2], 112)
+draw.circle(center[1], center[2], 224)
+draw.circle(center[1], center[2], 336)
 points(t1$X, t1$Y, col=group)
 
 # to subset into bins

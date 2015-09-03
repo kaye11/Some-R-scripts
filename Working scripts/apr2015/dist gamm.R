@@ -13,7 +13,7 @@ source("lang.R")
 s=mgcv:::s
 
 #Bin A
-BinA= subset (binned, bin=='binA')
+BinA= subset (distall, bin=='binA')
 expA=as.data.frame(data.table(cbind(cond=BinA$cond, T=BinA$T, ID=BinA$ID)))
 cor(expA, method = "spearman")
 
