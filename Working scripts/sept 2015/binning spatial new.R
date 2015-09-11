@@ -27,6 +27,7 @@ group <- cut(distcenter, c(-1, radii, 2*max(radii)), labels=FALSE)
 
 # draw circles in x,y coordinate space, use the eqscplot() function from package MASS
 eqscplot(0, 0, type="n", xlim=range(t1$X, center[1]+c(-1, 1)*max(radii)), ylim=rev(range(t1$Y, center[2]+c(-1, 1)*max(radii))))
+#draw.circle(center[1], center[2], radii)
 draw.circle(center[1], center[2], 112)
 draw.circle(center[1], center[2], 224)
 draw.circle(center[1], center[2], 336)
@@ -55,24 +56,3 @@ VN<- readline("What data did you analyse? SPECIFY DATA TYPE:")
 Vid<-paste ("d:/Karen's/PhD/R program/Processed_data/trackdata/densecells_popbased/binneddata/",VN,".csv")
 write.table(t1, Vid, sep=";", col.names=T, row.names=F)
 
-##checking speed
-
-grid.newpage()
-text <- element_text(size = 20) #change the size of the axes
-theme_set(theme_bw()) 
-
-vel=t1
-
-mf_labeller2 <- function(var, value){
-  value <- as.character(value)
-  if (var=="bin") { 
-    value[value=="binA"] <- "Bin A"
-    value[value=="binB"]   <- "Bin B"
-    value[value=="binC"] <- "Bin C"
-  }
-  return(value)
-}
-
-library(mgcv)
-
-ggplot(data = vel, aes(x=T,y=V))+ stat_smooth(method="gam", formula=y~s(x, k=7), size=2, se=TRUE)+facet_grid(~bin)

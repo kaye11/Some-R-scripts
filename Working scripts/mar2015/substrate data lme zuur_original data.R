@@ -446,3 +446,18 @@ ggplot(data = BinA, aes(x=T,y=CellsN, color=treat2))+
   scale_x_continuous (breaks=c(200, 400, 600)) 
 
 
+
+#plotting data Cells (not normalized)
+
+ge<- summarySE(sub, measurevar="Cells", groupvars=c("treatment", "Bin", "T"), na.rm=TRUE)
+
+ggplot(data=ge, aes(x=T, y=Cells, shape=treatment, color=treatment)) + geom_point(size=5)+ 
+  geom_errorbar(aes(ymin=Cells-se, ymax=Cells+se), width=30, size=1) + facet_grid(.~Bin) + 
+  labs(list(x = "Time (s)", y = "Cells"))+ labs (color="Experimental treatmentition")+
+  theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold"), 
+        axis.title.x=element_text(size=20,face="bold", vjust=-0.01),
+        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="bottom",
+        strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), plot.margin = unit(c(0.5,1,1,1.5), "cm")) + 
+  scale_x_continuous (breaks=c(200, 400, 600))
