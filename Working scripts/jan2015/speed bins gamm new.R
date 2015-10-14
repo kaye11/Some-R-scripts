@@ -6,9 +6,11 @@ library(gridExtra)
 library(mgcv)
 library(data.table)
 
+
+
 #Bin A
-BinA= subset (binned, bin=='binA')
-expA=as.data.frame(data.table(cbind(cond=BinA$cond, T=BinA$T, ID=BinA$ID)))
+BinA= subset (old_data, bin=='binA')
+expA=as.data.frame(data.table(cbind(cond=BinA$cond, T=BinA$time, ID=BinA$ID)))
 cor(expA, method = "spearman")
 
 vif_func(in_frame=expA,thresh=5,trace=T)
@@ -16,9 +18,9 @@ vif_func(in_frame=expA,thresh=5,trace=T)
 pairs(expA, lower.panel = panel.smooth2,  upper.panel = panel.cor, diag.panel = panel.hist)
 
 #summaries
-SpeedBinA <- summarySE(BinA, measurevar="V", groupvars=c("cond"))
-SpeedBinB <- summarySE(BinB, measurevar="V", groupvars=c("cond"))
-SpeedBinC <- summarySE(BinC, measurevar="V", groupvars=c("cond"))
+SpeedBinA <- summarySE(BinA, measurevar="V", groupvars=c("cond", "time"))
+SpeedBinB <- summarySE(BinB, measurevar="V", groupvars=c("cond", "time"))
+SpeedBinC <- summarySE(BinC, measurevar="V", groupvars=c("cond","time"))
 
 speedbins=as.data.frame(rbind(SpeedBinA, SpeedBinB, SpeedBinC))
 
@@ -26,24 +28,24 @@ speedbins=as.data.frame(rbind(SpeedBinA, SpeedBinB, SpeedBinC))
 op=par(mfrow=c(2,2))
 boxplot(Vlog~cond, data=BinA)
 boxplot(Vlog~ID, data=BinA)
-boxplot (Vlog~T, data=BinA)
+boxplot (Vlog~time, data=BinA)
 
 #levene
 library(lawstat)
 levene.test(BinA$Vlog, group=BinA$ID, location="mean") #unequal
 levene.test(BinA$Vlog, group=BinA$time, location="mean") #unequal
 levene.test(BinA$Vlog, group=BinA$cond, location="mean")
-levene.test(BinA$Vlog, group=BinA$T, location="mean") # unequal
+levene.test(BinA$Vlog, group=BinA$time, location="mean") # unequal
 
 #gamm
-BA <- gamm (Vlog~s(T, by=cond, bs="fs"), method="REML", data = BinA)
-BA1 <- gamm (Vlog~s(T, by=cond, bs="fs", xt="cr"), method="REML", data = BinA) #best
-BA2 <- gamm (Vlog~s(T, by=cond, bs="fs", xt="cs"), method="REML", data = BinA) 
+BA <- gamm (Vlog~s(time, by=cond, bs="fs"), method="REML", data = BinA)
+BA1 <- gamm (Vlog~s(time, by=cond, bs="fs", xt="cr"), method="REML", data = BinA) #best
+BA2 <- gamm (Vlog~s(time, by=cond, bs="fs", xt="cs"), method="REML", data = BinA) 
 
 anova(BA$lme, BA1$lme, BA2$lme)
 
 #make random factor and correlations
-fBinA <- Vlog~s(T, by=cond, bs="fs", xt="cr")
+fBinA <- Vlog~s(time, by=cond, bs="fs", xt="cr")
 
 BA3 <- gamm (fBinA, method="REML",  random=list(ID=~1), data = BinA) 
 BA4 <- gamm (fBinA, method="REML", random=list(ID=~1), correlation= corAR1 (form=~1|cond/ID), data = BinA) #BEST
@@ -81,7 +83,7 @@ summary_modelA$s.table
 
 p_table.A <- data.frame(summary_modelA$p.table)
 p_table.A <- within(p_table, {lci <- Estimate - qnorm(0.975) * Std..Error
-                            uci <- Estimate + qnorm(0.975) * Std..Error})
+uci <- Estimate + qnorm(0.975) * Std..Error})
 p_table.A
 
 
@@ -89,7 +91,7 @@ plot(BA8$lme)
 summary(BA8$lme)
 
 ##BIN B
-BinB= subset (binned, bin=='binB')
+BinB= subset (old_data, bin=='binB')
 expB=as.data.frame(data.table(cbind(cond=BinB$cond, T=BinB$T, ID=BinB$ID)))
 cor(expB, method = "spearman")
 
@@ -152,7 +154,7 @@ summary_modelB$s.table
 
 p_table.B <- data.frame(summary_modelB$p.table)
 p_table.B <- within(p_table, {lci <- Estimate - qnorm(0.975) * Std..Error
-                              uci <- Estimate + qnorm(0.975) * Std..Error})
+uci <- Estimate + qnorm(0.975) * Std..Error})
 p_table.B
 
 
@@ -162,7 +164,7 @@ summary(BB8$lme)
 
 ##BIN C
 
-BinC= subset (binned, bin=='binC')
+BinC= subset (old_data, bin=='binC')
 expC=as.data.frame(data.table(cbind(cond=BinC$cond, T=BinC$T, ID=BinC$ID)))
 cor(expC, method = "spearman")
 
@@ -225,7 +227,7 @@ summary_modelC$s.table
 
 p_table.C <- data.frame(summary_modelC$p.table)
 p_table.C <- within(p_table, {lci <- Estimate - qnorm(0.975) * Std..Error
-                              uci <- Estimate + qnorm(0.975) * Std..Error})
+uci <- Estimate + qnorm(0.975) * Std..Error})
 p_table.C
 
 

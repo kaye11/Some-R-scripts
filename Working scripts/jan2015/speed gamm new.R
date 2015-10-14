@@ -43,6 +43,7 @@ SG <- gamm (Vlog ~ s(T, by=cond, bs="fs"), data=binned)
 SG1 <- gamm (Vlog ~ s(T, by=cond, bs="fs") + s(bin, by=cond, bs="fs"), data=binned)
 SG2 <- gamm (Vlog ~ s(T, by=cond, bs="fs", xt="cr") + s(bin, by=cond, bs="fs", xt="cr") + ti (T, bin, by=cond, bs="fs", xt="cr"), data=binned) #best
 SG2.1 <- gamm (Vlog ~ s(T, by=cond, bs="fs", xt="cs") + s(bin, by=cond, bs="fs", xt="cs") + ti (T, bin, by=cond, bs="fs", xt="cs"), data=binned)
+SG2.2 <- gamm (Vlog ~ s(T, by=cond, bs="fs", xt="cc") + s(bin, by=cond, bs="fs", xt="cc") + ti (T, bin, by=cond, bs="fs", xt="cc"), data=binned)
 
 
 #put correlations
@@ -66,6 +67,33 @@ SG7 <- gamm (Form, correlation = corAR1 (form = ~ 1|bin/ID), random=list(ID=~1),
 
 anova(SG$lme, SG1$lme, SG2$lme, SG2.1$lme, SG3$lme, SG5$lme, SG6$lme, SG7$lme)
 
+
+SG8 <- gamm (Vlog ~ s(T, by=cond, bs="fs", xt="cs") + s(bin, by=cond, bs="fs", xt="cs") + ti (T, bin, by=cond, bs="fs", xt="cs"), 
+             correlation = corAR1 (form = ~ 1|bin/ID), random=list(ID=~1), weights= varIdent (form= ~1|cond), data=binned) 
+
+#SG9 <- gamm (Vlog ~ s(T, by=cond, bs="fs", xt="cr") + s(bin, by=cond, bs="fs", xt="cs") + ti (T, bin, by=cond, bs="fs", xt="cs"), correlation = corAR1 (form = ~ 1|bin/ID), random=list(ID=~1), weights= varIdent (form= ~1|cond), data=binned) 
+
+SG10 <- gamm (Vlog ~ s(T, by=cond, bs="fs", xt="cr") + s(bin, by=cond, bs="fs", xt="cr") + cond*bin,
+                 correlation = corAR1 (form = ~ 1|bin/ID), random=list(ID=~1), weights= varIdent (form= ~1|cond), data=binned)
+
+Form2 <- formula (Vlog ~ s(time, by=cond, bs="fs", xt="cr") + s(bin, by=cond, bs="fs", xt="cr") + ti (time, bin, by=cond, bs="fs", xt="cr"))
+
+#try with binned data, by 30s
+SG7.1 <- gamm (Form2, correlation = corAR1 (form = ~ 1|bin/ID), random=list(ID=~1), weights= varIdent (form= ~1|cond), data=binned) #best
+
+#CVgam
+CVgam(Vlog ~ s(time, by=cond, bs="fs", xt="cr") + s(bin, by=cond, bs="fs", xt="cr") + ti (time, bin, by=cond, bs="fs", xt="cr"), 
+      data=binned, nfold=10, debug.level = 0, method = "GCV.Cp", printit = TRUE, cvparts=NULL, gamma=1, seed=100)
+
+#GAMscale CV-mse-GAM  
+#0.4555      0.4565 
+
+CVgam(Vlog ~ s(T, by=cond, bs="fs", xt="cr") + s(bin, by=cond, bs="fs", xt="cr") + ti (T, bin, by=cond, bs="fs", xt="cr"), data=binned, 
+      nfold=10, debug.level = 0, method = "GCV.Cp", printit = TRUE, cvparts=NULL, gamma=1, seed=29)
+
+#GAMscale CV-mse-GAM  
+#0.4552      0.4562 
+
 #best model is SG7 AIC= 25232.25
 
 gam.check (SG7$gam)
@@ -79,6 +107,8 @@ ggplot(data = binned, aes(x=T,y=V, color=cond))+
 op=par(mfrow=c(2,2))
 plot(SG7$gam)
 plot(SG7$lme)
+
+plot (SG7$gam, residuals=TRUE, pch=1, las=2)
 
 #try nlme
 SG.lme <- lme (Vlog ~ cond*bin*time, correlation = corAR1 (), random = ~1|ID, weights= varIdent (form= ~1|cond), data=binned)

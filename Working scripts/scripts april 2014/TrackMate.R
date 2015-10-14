@@ -13,7 +13,7 @@ s1=s1a[,list(T=T, X=X, Y=Y, V=c(0, sqrt(diff(X)^2+diff(Y)^2))), by=c("A")]
 
 t1=s1
 
-qplot(X, Y, data = t1, color = factor(A), group = factor(A))+
+qplot(X, Y, data = s1, color = factor(A), group = factor(A))+
   guides(col = guide_legend(nrow = 25)) + scale_y_reverse()+ geom_path(aes(group=factor(A))) 
 
 qplot(X, Y, data=t1, color = factor(A), group = factor(A))+ geom_point(size=1)+
@@ -22,6 +22,6 @@ qplot(X, Y, data=t1, color = factor(A), group = factor(A))+ geom_point(size=1)+
   labs(list(title="Control Alox Bead"))+
   theme(axis.text=element_text(size=20, face="bold"), axis.title=element_text(size=20,face="bold"), 
         legend.position="none", plot.title = element_text(size =20, face="bold"))+
-  annotate("path",x = 337 + 49*cos(seq(0,2*pi,length.out=100)), y=322 + 49*sin(seq(0,2*pi,length.out=100)), 
+  annotate("path",x = 344 + 43*cos(seq(0,2*pi,length.out=100)), y=344 + 43*sin(seq(0,2*pi,length.out=100)), 
            color="black", size=2)  
 

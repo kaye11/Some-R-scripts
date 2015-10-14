@@ -119,6 +119,11 @@ source("summarySE.R")
 summary_combdata <- summarySE(combineddata, measurevar = "V", groupvars = c("bin", "cond"))
 summary_combdata_correctbin <- summarySE(combineddatacorrectbin, measurevar = "V", groupvars = c("bin", "cond"))
 
+sum.olddata <- summarySE(old_data, measurevar = "V", groupvars = c("bin", "cond"))
+
+test.it <- lme (Vl)
+
+
 #no bins
 
 ggplot(data = combineddatacorrectbin, aes(x=T,y=V, color=cond))+ 
@@ -209,6 +214,10 @@ ggplot(data = vm4, aes(x=T,y=V, color=cond))+
 
 summary_alldata <- summarySE(alldata, measurevar = "V", groupvars = c("bin", "cond"))
 summary_vm4 <- summarySE(vm4, measurevar = "V", groupvars = c("bin", "cond"))
+
+summary_vm4$normV <- summary_vm4$V/summary_vm4$N
+
+
 
 #barplots
 ggplot(data = old_data, aes(x=cond,y=V, color=cond))+ geom_boxplot()+facet_grid(~bin)+

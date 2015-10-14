@@ -7,7 +7,7 @@ library(gtable)
 bead2=61.5*0.0001 #in cm
 rad=seq(1, 340, 1)*0.0001
 D= 10^-5 #cm^2/s
-i=1.21331E-07*10^-6 #in mol/s
+i=1.17503E-07*10^-6 #in mol/s
 Ci=i/4*pi*bead2*D #in mol/cm3
 i2=Ci*4*pi*bead2*D
 
@@ -33,10 +33,9 @@ grid.newpage()
 text <- element_text(size = 20, face="bold") #change the size of the axes
 theme_set(theme_bw())
 
-ggplot (data=var2, aes(x=rad2, y=uMsq))+geom_line(size=2)+
-  labs(x="Distance from bead (µm)", 
-       y="µM dSi")+
-  theme(axis.text=element_text(size=20), axis.title=element_text(size=25,face="bold"), 
+ggplot (data=var2, aes(x=rad2, y=uMsq))+geom_line(size=2)+ xlab("Distance from bead (µm)")+
+  ylab(expression(paste("µM ", Si(OH)[4] / bead, sep="")))+
+  theme(axis.text=element_text(size=20), axis.title=element_text(size=25), 
         plot.title = element_text(size =25, face="bold"), axis.text=text, 
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank())
@@ -44,5 +43,8 @@ ggplot (data=var2, aes(x=rad2, y=uMsq))+geom_line(size=2)+
 ia=1.17503E-07*10^-6
 ib=1.13675E-07*10^-6
 ic=1.32814E-07*10^-6
+imean= 1.17503e-13
 
+ggplot (data=var2, aes(x=rad2, y=uMsq))+geom_line(size=2)+ xlab("Distance from bead (µm)")+
+  ylab(expression(paste("µm ", Si(OH)[4] / bead, sep="")))
 

@@ -72,14 +72,16 @@ grid.arrange(countplot, velplot, accplot, ncol=1)
 #distance plot (distorder2)
 distorder2$distmm=distorder2$sum/1000
 
+
+
 distsum<- summarySE(binned2, measurevar="dist", groupvars=c("cond", "bin", "T"), na.rm=TRUE)
 
 distorder2$cond2 <- factor(distorder2$cond, levels=c("Con", "Si"), labels=c("Control", "dSi"))
-distorder2$Experimental Condition <- distorder2$cond
+distorder2$Experimental<-Condition <- distorder2$cond
 
 
 distplot=ggplot(data=distorder2, aes(x=time, y=distmm, color=cond2)) +  
-  stat_smooth(method="gam", formula=y~s(x, k=5), size=2, se=TRUE)+
+  stat_smooth(method="loess", size=2, se=TRUE)+
   labs(list(x = "Time (s)", y = "Sum distance \n from the bead (mm)")) +
   scale_colour_manual(values = c("lightcoral", "steelblue2"), labels=c("Control", "dSi")) + 
   facet_grid(.~bin, label=mf_labeller2, scales="free_y")+
@@ -91,6 +93,10 @@ distplot=ggplot(data=distorder2, aes(x=time, y=distmm, color=cond2)) +
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), plot.margin = unit(c(0.5,1,1,0), "cm")) + 
   scale_x_discrete (breaks=c("0", "200", "400", "600"))
+
+
+
+
 
 tm=seq(0, 600, by = 60)
 binned$time2 <- cut(binned$T, tm, labels=paste(tail(tm, -1L)))
@@ -109,7 +115,7 @@ angplot=ggplot(data=angsum, aes(x=time2, y=angs, shape=cond, color=cond)) + geom
   labs(list(x = "Time (s)", y = "Sine angle"))+ labs (color="Experimental condition")+
   theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold"), 
         axis.title.x=element_text(size=20,face="bold", vjust=-0.01),
-        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="none",
+        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="bottom",
         strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), plot.margin = unit(c(0.5,1,1,1.5), "cm")) + 
