@@ -20,6 +20,7 @@ old_data$Vlog  <- log(old_data$V+1)
 old_data$timef <- as.factor(old_data$time)
 old_data$ID <- as.factor(paste (old_data$A, old_data$cond, sep="-"))
 old_data$time <- as.numeric(old_data$time)
+old_data$cond <- as.factor(old_data$cond)
 
 old_data.sum <- summarySE(old_data, measurevar="Vlog", groupvars=c("cond", "bin", "time"))
 old_data.sum_bin <- summarySE(old_data, measurevar="Vlog", groupvars=c("cond", "bin"))
@@ -31,3 +32,5 @@ qplot(x=T, y=Vlog, data=old_data)+geom_line()+facet_grid(bin~cond, scales="free"
 
 
 qplot(timef, angs, color = cond, data = old_data,  geom = "boxplot") + facet_wrap(cond~bin, scales="free") 
+
+qplot(timef, Vlog, color = cond, data = BinA,  geom = "boxplot") + facet_wrap(~cond, scales="free") 

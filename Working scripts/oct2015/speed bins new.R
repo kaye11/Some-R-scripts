@@ -28,6 +28,10 @@ source("tsDiagGamm.R")
 BinA= subset (old_data, bin=='binA')
 BinA <- BinA [! (BinA$cond=="dSi" & BinA$time=="360"),  ]
 BinA <- BinA [! (BinA$cond=="dSi" & BinA$time=="600"),  ]
+BinA <- BinA [! BinA$time=="0",  ]
+
+qplot(timef, Vlog, color = cond, data = BinA,  geom = "boxplot") + facet_wrap(~cond, scales="free") 
+
 
 expA=as.data.frame(data.table(cbind(cond=as.numeric(as.factor(BinA$cond)), T=as.numeric(BinA$time), ID=as.numeric(as.factor(BinA$ID)))))
 
@@ -42,7 +46,6 @@ SpeedBinA <- summarySE(BinA, measurevar="V", groupvars=c("cond", "time"))
 SpeedBinB <- summarySE(BinB, measurevar="V", groupvars=c("cond", "time"))
 SpeedBinC <- summarySE(BinC, measurevar="V", groupvars=c("cond","time"))
 
-speedbins=as.data.frame(rbind(SpeedBinA, SpeedBinB, SpeedBinC))
 
 #boxplots
 op=par(mfrow=c(2,2))
@@ -80,7 +83,7 @@ anova(BA$lme, BA1$lme, BA2$lme, BA3$lme, BA4$lme, BA5$lme)
 BA8 <- gamm (fBinA, method="REML", random=list(ID=~1), correlation= corAR1 (form=~1|cond/ID), 
              weights = varIdent(form=~1| cond), data = BinA) 
 
-#BA9 <- gamm (fBinA, method="REML", random=list(ID=~1), correlation= corAR1 (form=~1|cond/ID), weights = varExp(form=~fitted(.)), data = BinA) 
+BA9 <- gamm (fBinA, method="REML", random=list(ID=~1), correlation= corAR1 (form=~1|cond/ID), weights = varExp(form=~fitted(.)), data = BinA) 
 #BA9 worked but kind of weirdly
 
 
@@ -88,7 +91,7 @@ anova(BA$lme, BA1$lme, BA2$lme, BA3$lme, BA4$lme, BA5$lme, BA8$lme)
 
 AIC(BA$lme, BA1$lme, BA2$lme, BA3$lme, BA4$lme, BA5$lme, BA8$lme, BA9$lme)
 
-with(BinA, tsDiagGamm(BA8, timevar=time, observed=Vlog))
+with(BinA, tsDiagGamm(BA9, timevar=time, observed=Vlog))
 
 #best model is BA8
 
@@ -107,7 +110,12 @@ plot(BA8$lme)
 
 #Bin B
 BinB= subset (old_data, bin=='binB')
-expA=as.data.frame(data.table(cbind(cond=as.numeric(as.factor(BinB$cond)), T=as.numeric(BinB$time), ID=as.numeric(as.factor(BinB$ID)))))
+BinB <- BinB [! BinB$time=="0",  ]
+
+qplot(timef, Vlog, color = cond, data = BinB,  geom = "boxplot") + facet_wrap(~cond, scales="free") 
+
+
+expB=as.data.frame(data.table(cbind(cond=as.numeric(as.factor(BinB$cond)), T=as.numeric(BinB$time), ID=as.numeric(as.factor(BinB$ID)))))
 
 cor(expA, method = "spearman")
 
@@ -119,8 +127,6 @@ pairs(expA, lower.panel = panel.smooth2,  upper.panel = panel.cor, diag.panel = 
 SpeedBinA <- summarySE(BinB, measurevar="V", groupvars=c("cond", "time"))
 SpeedBinB <- summarySE(BinB, measurevar="V", groupvars=c("cond", "time"))
 SpeedBinC <- summarySE(BinC, measurevar="V", groupvars=c("cond","time"))
-
-speedbins=as.data.frame(rbind(SpeedBinB, SpeedBinB, SpeedBinC))
 
 #boxplots
 op=par(mfrow=c(2,2))
@@ -181,13 +187,17 @@ plot(BB8$lme)
 
 #Bin C
 BinC= subset (old_data, bin=='binC')
-expA=as.data.frame(data.table(cbind(cond=as.numeric(as.factor(BinC$cond)), T=as.numeric(BinC$time), ID=as.numeric(as.factor(BinC$ID)))))
+BinC <- BinC [! BinC$time=="0",  ]
+
+qplot(timef, Vlog, color = cond, data = BinC,  geom = "boxplot") + facet_wrap(~cond, scales="free") 
+
+expC=as.data.frame(data.table(cbind(cond=as.numeric(as.factor(BinC$cond)), T=as.numeric(BinC$time), ID=as.numeric(as.factor(BinC$ID)))))
 
 cor(expA, method = "spearman")
 
 vif_func(in_frame=expA,thresh=5,trace=T)
 
-pairs(expA, lower.panel = panel.smooth2,  upper.panel = panel.cor, diag.panel = panel.hist)
+pairs(expC, lower.panel = panel.smooth2,  upper.panel = panel.cor, diag.panel = panel.hist)
 
 #summaries
 SpeedBinC <- summarySE(BinC, measurevar="V", groupvars=c("cond","time"))
@@ -250,9 +260,54 @@ anova(BC8$gam)
 
 plot(BC8$lme)
 
+#plotting
+grid.newpage()
+text <- element_text(size = 20) #change the size of the axes
+theme_set(theme_bw()) 
+source("resizewin.R")
+
+resize.win(9,6)
+
+
+mf_labeller <- function(var, value){
+  value <- as.character(value)
+  if (var=="bin") { 
+    value[value=="binA"] <- "Bin A"
+    value[value=="binB"]   <- "Bin B"
+    value[value=="binC"] <- "Bin C"
+  }
+  return(value)
+}
 
 
 
-
+ggplot(data=speedsumall2, aes(x=time, y=mean, shape=cond, color=cond)) + geom_point(size=5)+
+         geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=20, size=1) + facet_grid(~bin, labeller=mf_labeller)+
+         scale_colour_manual(values = c(Control="lightcoral", dSi="steelblue2"), name="Treatment") +
+         scale_shape_discrete (name="Treatment") +
+         scale_fill_discrete(name="Treatment") +
+         labs(list(x = "Time (s)", y = "Mean cell speed (µm/s)"))+
+         theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold", vjust=1.5), 
+               axis.title.x=element_text(size=20,face="bold", vjust=-0.5),
+               plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="none",
+               strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
+               panel.grid.major = element_blank(),panel.margin.y = unit(1, "lines"), 
+               panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm")) + scale_x_continuous (breaks=c(200, 400, 600)) 
+       
+#Bin A sum
+BinA.sum <- subset(speedsumall2, bin=="binA")
+ 
+ggplot(data=BinA.sum, aes(x=time, y=mean, shape=cond, color=cond)) + geom_point(size=5)+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=20, size=1) + 
+  scale_colour_manual(values = c(Control="lightcoral", dSi="steelblue2"), name="Treatment") +
+  scale_shape_discrete (name="Treatment") +
+  scale_fill_discrete(name="Treatment") +
+  labs(list(x = "Time (s)", y = "Mean cell speed (µm/s)",  title="Bin A"))+ 
+  theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold", vjust=1.5), 
+        axis.title.x=element_text(size=20,face="bold", vjust=-0.5),
+        plot.title = element_text(size =20), axis.text=text,  legend.position="none",
+        strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
+        panel.grid.major = element_blank(),panel.margin.y = unit(1, "lines"), 
+        panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm")) + scale_x_continuous (breaks=c(200, 400, 600)) 
 
 

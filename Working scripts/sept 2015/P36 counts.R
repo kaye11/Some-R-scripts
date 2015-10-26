@@ -36,3 +36,9 @@ ggplot(data=P36_summarycount, aes(x=T, y=mean, color=cond))+geom_errorbar(aes(ym
   geom_line()+geom_point()+facet_grid(~bin)
 
 ggplot(data=P36_summarycount, aes(x=T, y=mean, color=cond, shape=cond))+geom_smooth()+geom_point()+ facet_grid(bin~., scales="free")
+
+p36_10 <- subset(P36, P36$T<11, )
+
+p36_10$T.factor <- as.factor(p36_10$T)
+
+qplot(T.factor,Count, color = cond, data = p36_10,  geom = "boxplot") + facet_wrap(cond~bin, scales="free") 

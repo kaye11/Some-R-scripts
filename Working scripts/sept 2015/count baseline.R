@@ -6,7 +6,7 @@ library(gridExtra)
 library(mgcv)
 library(data.table)
 library(nlme)
-library(cowplot)
+
 
 dev.new(width=6, height=9)
 source("resizewin.R")
@@ -26,7 +26,7 @@ count$reptreatbin <- as.factor(paste(count$reptreat, count$Bin, sep = "-"))
 
 #check initial plot
 qplot(Bin,Cells, color = treatment, data = count,  geom = "boxplot") + facet_wrap(~treatment) 
-qplot(T,Cells, color = treatment, data = count,  geom = "boxplot") + facet_wrap(treatment~Bin, scales="free") 
+qplot(T.factor,Cells, color = treatment, data = count,  geom = "boxplot") + facet_wrap(treatment~Bin, scales="free") 
 
 #standardization
 
@@ -178,12 +178,12 @@ BinA5.lme <- lme (Form, random = ~1|reptreat,  weights=varIdent(form=~1|treatmen
 
 anova(BinA.gls, BinA1.lme, BinA2.lme, BinA3.lme, BinA5.lme)
 
-summary(BinA3.lme)
-anova(BinA3.lme)
+summary(BinA5.lme)
+anova(BinA5.lme)
 
 #residuals
-BinA.E2<-resid(BinA3.lme,type="normalized")
-BinA.F2<-fitted(BinA3.lme)
+BinA.E2<-resid(BinA5.lme,type="normalized")
+BinA.F2<-fitted(BinA5.lme)
 op<-par(mfrow=c(2,2),mar=c(4,4,3,2))
 MyYlab="Residuals"
 
@@ -247,12 +247,12 @@ anova(BinB.gls, BinB1.lme, BinB2.lme, BinB3.lme,BinB5.lme)
 
 #best was BinB5.lme but anova between BinB1.lme, BinB3.lme and BinB5.lme were not significant
 
-summary(BinB3.lme)
-anova(BinB3.lme)
+summary(BinB5.lme)
+anova(BinB5.lme)
 
 #residuals
-BinB.E2<-resid(BinB3.lme,type="normalized")
-BinB.F2<-fitted(BinB3.lme)
+BinB.E2<-resid(BinB5.lme,type="normalized")
+BinB.F2<-fitted(BinB5.lme)
 op<-par(mfrow=c(2,2),mar=c(4,4,3,2))
 MyYlab="Residuals"
 
@@ -309,12 +309,12 @@ BinC5.lme <- lme (Form, random = ~1|reptreat,  weights=varIdent(form=~1|treatmen
 
 anova(BinC.gls, BinC1.lme, BinC2.lme, BinC3.lme, BinC5.lme)
 
-summary(BinC3.lme)
-anova(BinC3.lme)
+summary(BinC5.lme)
+anova(BinC5.lme)
 
 #residuals
-BinC.E2<-resid(BinC3.lme,type="normalized")
-BinC.F2<-fitted(BinC3.lme)
+BinC.E2<-resid(BinC5.lme,type="normalized")
+BinC.F2<-fitted(BinC5.lme)
 op<-par(mfrow=c(2,2),mar=c(4,4,3,2))
 MyYlab="Residuals"
 
@@ -403,7 +403,7 @@ BinB.plot = ggplot(data=BinB.fit.combdata, aes(x=T, y=CellsBase, shape=treatment
 
 BinC.sum <- summarySE(BinC, measurevar="CellsBase", groupvars=c("T", "treatment"))
 
-BinC.fit <- as.data.frame(predictSE.lme(BinC5.lme, BinC, se.fit = TRUE, level = 0,
+BinC.fit <- as.data.frame(predictSE.lme(BinC3.lme, BinC, se.fit = TRUE, level = 0,
                                         print.matrix = FALSE))
 
 BinC.fit$upr <- BinC.fit$fit + (1.96 * BinC.fit$se)
