@@ -259,7 +259,7 @@ mf_labeller <- function(var, value){
 }
 
 
-ggplot(data=allbins.sum, aes(x=time, y=mean, shape=cond, color=cond)) + geom_point(size=5)+ 
+a=ggplot(data=allbins.sum, aes(x=time, y=mean, shape=cond, color=cond)) + geom_point(size=5)+ 
   facet_grid(.~bin, labeller=mf_labeller)+
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=20, size=1) +
   geom_smooth(data=allbins.fitdata, size=1,  aes(y=fit, ymin=lwr, ymax=upr, fill=cond), stat="identity", alpha=0.1)+ 
@@ -269,7 +269,7 @@ ggplot(data=allbins.sum, aes(x=time, y=mean, shape=cond, color=cond)) + geom_poi
   labs(list(x = "Time (s)", y = "Sine angle"))+  geom_hline(yintercept=0)+
   theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold", vjust=1.5), 
         axis.title.x=element_text(size=20,face="bold", vjust=-0.5),
-        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="none",
+        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="bottom",
         strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm")) + scale_x_continuous (breaks=c(200, 400, 600)) 

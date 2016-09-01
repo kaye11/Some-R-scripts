@@ -161,3 +161,5 @@ ggplot(data=prebase.sum, aes(x=T, y=CellsBase, shape=treatment)) + geom_point(si
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm")) + scale_x_continuous (breaks=c(200, 400, 600)) 
 
+library(multcomp)
+summary(glht(prebase3.lme, linfct=mcp(treatment="Tukey", covariate_average=TRUE, interaction_average=TRUE)))

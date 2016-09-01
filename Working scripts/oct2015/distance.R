@@ -325,7 +325,7 @@ mf_labeller <- function(var, value){
 }
 
 
-ggplot(data=allbins.sum, aes(x=time, y=sum_mm, shape=cond, color=cond)) + geom_point(size=5)+ 
+a=ggplot(data=allbins.sum, aes(x=time, y=sum_mm, shape=cond, color=cond)) + geom_point(size=5)+ 
   facet_grid(bin~., labeller=mf_labeller, scales="free")+
   geom_smooth(data=allbins.fitdata, size=1,  aes(y=fit, ymin=lwr, ymax=upr, fill=cond), stat="identity", alpha=0.1)+ 
   scale_colour_manual(values = c(Control="lightcoral", dSi="steelblue2"), name="Treatment") +

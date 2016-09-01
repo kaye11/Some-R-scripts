@@ -302,11 +302,109 @@ ggplot(data=BinA.sum, aes(x=T, y=CellsBase, shape=treatment2, color=treatment2))
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm")) + scale_x_continuous (breaks=c(200, 400, 600)) 
 
+#BinB fit
+BinB.sum <- summarySE(BinB, measurevar="CellsBase", groupvars=c("T", "treatment"))
+
+BinB.fit <- as.data.frame(predictSE.lme(BinB5.lme, BinB, se.fit = TRUE, level = 0,
+                                        print.matrix = FALSE))
+
+BinB.fit$upr <- BinB.fit$fit + (1.96 * BinB.fit$se)
+BinB.fit$lwr <- BinB.fit$fit - (1.96 * BinB.fit$se)
+
+BinB.fit.combdata <- cbind(BinB, BinB.fit)
+
+BinB.fit.combdata$treatment2 <- factor(BinB.fit.combdata$treatment, levels=c("Control", "Si", "Ge"), labels=c("Control", "dSi", "dGe"))
+BinB.sum$treatment2 <- factor(BinB.sum$treatment, levels=c("Control", "Si", "Ge"), labels=c("Control", "dSi", "dGe"))
+
+ggplot(data=BinB.sum, aes(x=T, y=CellsBase, shape=treatment2, color=treatment2)) + geom_point(size=5)+ 
+  geom_errorbar(aes(ymin=CellsBase-se, ymax=CellsBase+se), width=10, size=1) + 
+  geom_smooth(data=BinB.fit.combdata, size=1,  aes(y=fit, ymin=lwr, ymax=upr, fill=treatment2), method="lm", stat="identity", alpha=0.1)+ 
+  scale_colour_manual(values = c(Control="lightcoral", dSi="steelblue2", dGe="seagreen3"), name="Treatment") +
+  scale_shape_discrete (name="Treatment") +
+  scale_fill_manual (values = c(Control="lightcoral", dSi="steelblue2", dGe="seagreen3"), name="Treatment") + 
+  labs(list(x = "Time (s)", y = "Normalized cell count", alpha=0.2))+ 
+  theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold", vjust=1.5), 
+        axis.title.x=element_text(size=20,face="bold", vjust=-0.5),
+        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="bottom",
+        strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm")) + scale_x_continuous (breaks=c(200, 400, 600)) 
+
+#BinC fit
+BinC.sum <- summarySE(BinC, measurevar="CellsBase", groupvars=c("T", "treatment"))
+
+BinC.fit <- as.data.frame(predictSE.lme(BinC5.lme, BinC, se.fit = TRUE, level = 0,
+                                        print.matrix = FALSE))
+
+BinC.fit$upr <- BinC.fit$fit + (1.96 * BinC.fit$se)
+BinC.fit$lwr <- BinC.fit$fit - (1.96 * BinC.fit$se)
+
+BinC.fit.combdata <- cbind(BinC, BinC.fit)
+
+BinC.fit.combdata$treatment2 <- factor(BinC.fit.combdata$treatment, levels=c("Control", "Si", "Ge"), labels=c("Control", "dSi", "dGe"))
+BinC.sum$treatment2 <- factor(BinC.sum$treatment, levels=c("Control", "Si", "Ge"), labels=c("Control", "dSi", "dGe"))
+
+ggplot(data=BinC.sum, aes(x=T, y=CellsBase, shape=treatment2, color=treatment2)) + geom_point(size=5)+ 
+  geom_errorbar(aes(ymin=CellsBase-se, ymax=CellsBase+se), width=10, size=1) + 
+  geom_smooth(data=BinC.fit.combdata, size=1,  aes(y=fit, ymin=lwr, ymax=upr, fill=treatment2), method="lm", stat="identity", alpha=0.1)+ 
+  scale_colour_manual(values = c(Control="lightcoral", dSi="steelblue2", dGe="seagreen3"), name="Treatment") +
+  scale_shape_discrete (name="Treatment") +
+  scale_fill_manual (values = c(Control="lightcoral", dSi="steelblue2", dGe="seagreen3"), name="Treatment") + 
+  labs(list(x = "Time (s)", y = "Normalized cell count", alpha=0.2))+ 
+  theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold", vjust=1.5), 
+        axis.title.x=element_text(size=20,face="bold", vjust=-0.5),
+        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="bottom",
+        strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm")) + scale_x_continuous (breaks=c(200, 400, 600)) 
 
 
 
+BinB.sum$Bin="B"
+BinC.sum$Bin="C"
+suppbins.fitdata = rbind (BinB.fit.combdata, BinC.fit.combdata)
+suppbins.sum = rbind (BinB.sum, BinC.sum)
+
+mf_labeller <- function(var, value){
+  value <- as.character(value)
+  if (var=="Bin") { 
+    value[value=="B"]   <- "Bin B"
+    value[value=="C"] <- "Bin C"
+  }
+  return(value)
+}
+
+ggplot(data=suppbins.sum, aes(x=T, y=CellsBase, shape=treatment2, color=treatment2)) + geom_point(size=5)+ 
+  geom_errorbar(aes(ymin=CellsBase-se, ymax=CellsBase+se), width=20, size=1) + facet_grid(.~Bin, labeller=mf_labeller)+
+  scale_colour_manual(values = c(Control="lightcoral", dSi="steelblue2", dGe="seagreen3"), name="Treatment") +
+  scale_shape_discrete (name="Treatment") +
+  scale_fill_manual (values = c(Control="lightcoral", dSi="steelblue2", dGe="seagreen3"), name="Treatment") + 
+  labs(list(x = "Time (s)", y = "Normalized cell count", alpha=0.2))+ 
+  theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold", vjust=1.5), 
+        axis.title.x=element_text(size=20,face="bold", vjust=-0.5),
+        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="bottom",
+        strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm")) + scale_x_continuous (breaks=c(200, 400, 600)) 
 
 
+suppbins.dGe <- suppbins.sum[suppbins.sum$treatment2=="dGe",  ]
+suppbins.Control <- suppbins.sum[suppbins.sum$treatment2=="Control",  ]
 
+suppbins.noSi <- rbind(suppbins.dGe, suppbins.Control)
+
+
+ggplot(data=suppbins.noSi, aes(x=T, y=CellsBase, shape=treatment2, color=treatment2)) + geom_point(size=5)+ 
+  geom_errorbar(aes(ymin=CellsBase-se, ymax=CellsBase+se), width=20, size=1) + facet_grid(.~Bin, labeller=mf_labeller)+
+  scale_colour_manual(values = c(Control="lightcoral", dGe="seagreen3"), name="Treatment") +
+  scale_shape_discrete (name="Treatment") +
+  scale_fill_manual (values = c(Control="lightcoral", dGe="seagreen3"), name="Treatment") + 
+  labs(list(x = "Time (s)", y = "Normalized cell count", alpha=0.2))+ 
+  theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold", vjust=1.5), 
+        axis.title.x=element_text(size=20,face="bold", vjust=-0.5),
+        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="bottom",
+        strip.text.x = text, strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm")) + scale_x_continuous (breaks=c(200, 400, 600)) 
 
 

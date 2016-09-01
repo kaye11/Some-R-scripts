@@ -281,7 +281,7 @@ mf_labeller <- function(var, value){
 
 
 
-ggplot(data=speedsumall2, aes(x=time, y=mean, shape=cond, color=cond)) + geom_point(size=5)+
+a=ggplot(data=speedsumall2, aes(x=time, y=mean, shape=cond, color=cond)) + geom_point(size=5)+
          geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=20, size=1) + facet_grid(~bin, labeller=mf_labeller)+
          scale_colour_manual(values = c(Control="lightcoral", dSi="steelblue2"), name="Treatment") +
          scale_shape_discrete (name="Treatment") +

@@ -55,3 +55,15 @@ ggplot(data=difall2, aes(x=rad2, y=uMsq)) + geom_line(size=0.8)+
         strip.text.x = element_text(size=15), strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm"))
+
+#for poster
+
+ggplot(data=difall, aes(x=rad2, y=uMsq)) + geom_line(size=2)+ 
+   labs(x="Distance from bead (µm)", 
+       y="µM dSi/bead")+
+  theme(axis.text=element_text(size=20), axis.title.y=element_text(size=20,face="bold", vjust=1.5), 
+        axis.title.x=element_text(size=20,face="bold", vjust=-0.5),
+        plot.title = element_text(size =20, face="bold"), axis.text=text,  legend.position="none",
+        strip.text.x = element_text(size=15), strip.text.y = text, legend.title=text, legend.text=text, panel.margin=unit (0.5, "lines"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), plot.margin = unit(c(1,1,1,1), "cm"))

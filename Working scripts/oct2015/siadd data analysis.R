@@ -61,6 +61,9 @@ anova(si.gls, si1.lme, si3.lme)
 library(multcomp)
 
 summary(glht(si3.lme, covariate_average=TRUE, linfct=mcp(condadd="Tukey")))
+library(multcomp)
+
+summary(glht(si3.lme, linfct=mcp(condadd="Tukey", covariate_average=TRUE)))
 
 library(car)
 si.lm <-lm(Form, data=siadd2)
